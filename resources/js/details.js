@@ -159,7 +159,7 @@ function getEdited() {
   projects[projectId - 1].start_date = start;
   projects[projectId - 1].end_date = end;
 
-  apis.putAPI("PUT", utils.projectAPI, utils.secretKey, JSON.stringify(projects), (res) => { location.reload() });
+  apis.putAPI("PUT", `${utils.projectAPI}/${projectId}`, utils.secretKey, JSON.stringify(projects[projectId - 1]), (res) => { location.reload() });
   removeProject();
   activeProject();
 }
