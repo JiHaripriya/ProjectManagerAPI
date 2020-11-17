@@ -17,7 +17,7 @@ const projectDetailsSchema = Joi.object({
 router
 .route('/')
 .get((req, res) => {
-    let sql = 'SELECT * FROM projects';
+    let sql = 'SELECT project_id as id, name as project_name, description as project_desc, percent as percentage_complete, start_date, end_date FROM projects';
     db.query(sql, (err, results) => {
         if(err) return res.send(err.message)
 
@@ -25,7 +25,7 @@ router
         db.query(sql, (err, technologyMapping) => {
             projects = results.map(eachProject => {
                 eachProject.start_date = utils.getFullDate(eachProject.start_date), eachProject.end_date = utils.getFullDate(eachProject.end_date)
-                eachProject["tech_used"] = technologyMapping[eachProject.project_id - 1].technologies.split(',')
+                eachProject["tech_used"] = technologyMapping[eachProject.id - 1] ? technologyMapping[eachProject.id - 1].technologies.split(',') : []
                 return eachProject
             })
             res.send(projects)
@@ -48,7 +48,8 @@ router
     }
 })
 
-router.route("/:id")
+router
+.route("/:id")
 .put((req, res) => {
     const {tech_used , ...projectDetails} = req.body
     const validationStatus = projectDetailsSchema.validate(req.body)
