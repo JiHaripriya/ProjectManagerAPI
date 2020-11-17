@@ -41,7 +41,7 @@ router
     })
     .put((req, res) => {
         const putObj = req.body;
-        let sql = `UPDATE project_resource_mapping SET billable = ${putObj.billable}, rate_per_hour = ${putObj.rate_per_hour} WHERE project_id = ${putObj.project_id} AND resource_id = ${putObj.id};`;
+        let sql = `UPDATE project_resource_mapping AS prm JOIN resources AS r ON prm.resource_id = r.resource_id SET billable = ${putObj.billable}, rate_per_hour = ${putObj.rate_per_hour} WHERE project_id = ${putObj.project_id} AND email_id = '${putObj.email}';`;
         let query = db.query(sql, (err, result) => {
             if (err) return res.send(err.message);
             else res.send(result);
@@ -49,7 +49,7 @@ router
     })
     .delete((req, res) => {
         const deleteObj = req.body;
-        let sql = `DELETE FROM project_resource_mapping WHERE project_id = ${deleteObj.project_id} AND resource_id = ${deleteObj.id};`;
+        let sql = `DELETE prm FROM project_resource_mapping AS prm JOIN resources AS r ON prm.resource_id = r.resource_id WHERE project_id = ${deleteObj.project_id} AND email_id = '${deleteObj.email}';`;
         let query = db.query(sql, (err, result) => {
             if (err) return res.send(err.message);
             else res.send(result);
@@ -60,7 +60,7 @@ function allocateResourceToProject(id, postObj) {
     // Insert into project_resource_mapping table.
     const sql = `INSERT INTO project_resource_mapping VALUES (${postObj.project_id}, ${id}, ${postObj.billable}, ${postObj.rate_per_hour});`;
     const query = db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) return res.send(err.message);
         else return result;
     });
 }
