@@ -10,10 +10,10 @@ router
             if (err) return res.send(err.message);
             else {
                 results.forEach(resource => {
-                    if(resource.billable == 1) resource.billable = 'True'
+                    if (resource.billable == 1) resource.billable = 'True'
                     else resource.billable = 'False'
                 })
-                console.log(results)
+                // console.log(results)
                 res.send(JSON.stringify(results));
             }
         });
@@ -33,14 +33,27 @@ router
                         const query = db.query(sql, (err, result) => {
                             if (err) return res.send(err.message);
                             else {
-                                res.send(allocateResourceToProject(result[0].resource_id, postObj));
+                                const id = result[0].resource_id;
+                                const sql = `INSERT INTO project_resource_mapping VALUES (${postObj.project_id}, ${id}, ${postObj.billable}, ${postObj.rate_per_hour});`;
+                                const query = db.query(sql, (err, result) => {
+                                    if (err) throw err;
+                                    else res.send(result);
+                                });
                             }
                         });
                     }
                 });
             } else {
                 // Resource with given email id exists in resources table.
-                res.send(allocateResourceToProject(result[0].resource_id, postObj));
+                // const resultMsg = allocateResourceToProject(result[0].resource_id, postObj);
+                // console.log(resultMsg);
+                // res.send(resultMsg);
+                const id = result[0].resource_id;
+                const sql = `INSERT INTO project_resource_mapping VALUES (${postObj.project_id}, ${id}, ${postObj.billable}, ${postObj.rate_per_hour});`;
+                const query = db.query(sql, (err, result) => {
+                    if (err) throw err;
+                    else res.send(result);
+                });
             }
         });
     })
@@ -54,7 +67,9 @@ router
     })
     .delete((req, res) => {
         const deleteObj = req.body;
+        console.log(deleteObj)
         let sql = `DELETE prm FROM project_resource_mapping AS prm JOIN resources AS r ON prm.resource_id = r.resource_id WHERE project_id = ${deleteObj.project_id} AND email_id = '${deleteObj.email}';`;
+        console.log(sql)
         let query = db.query(sql, (err, result) => {
             if (err) return res.send(err.message);
             else res.send(result);
@@ -65,7 +80,7 @@ function allocateResourceToProject(id, postObj) {
     // Insert into project_resource_mapping table.
     const sql = `INSERT INTO project_resource_mapping VALUES (${postObj.project_id}, ${id}, ${postObj.billable}, ${postObj.rate_per_hour});`;
     const query = db.query(sql, (err, result) => {
-        if (err) return res.send(err.message);
+        if (err) throw err;
         else return result;
     });
 }
