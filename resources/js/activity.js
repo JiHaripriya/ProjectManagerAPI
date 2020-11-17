@@ -211,6 +211,7 @@ activityFormButton.addEventListener('click', function (e) {
     if (resourceName && emailId) {
         // All form data is valid
         const statusReportObj = {
+            projectId: Number(document.querySelector('.active-card').dataset.id),
             date,
             resourceName,
             emailId: emailId.trim(),
@@ -219,6 +220,10 @@ activityFormButton.addEventListener('click', function (e) {
             submitDate,
             submitTime
         }
+
+        console.log("offline", utils.latestOfflineStatusReports)
+        console.log("My", statusReportObj)
+        
         if (!utils.latestOfflineStatusReports[Number(document.querySelector('.active-card').dataset.id) - 1]) {
             utils.latestOfflineStatusReports[Number(document.querySelector('.active-card').dataset.id) - 1] = [];
         }
@@ -245,7 +250,7 @@ activityFormButton.addEventListener('click', function (e) {
             validationPopUp.addEventListener('click', _ => utils.popup('OvertimePopUp'))
         }
         else {
-            apis.putAPI("PUT", utils.statusReportAPI, utils.secretKey, JSON.stringify(utils.latestOfflineStatusReports), (obj) => {
+            apis.putAPI("POST", utils.statusReportAPI, utils.secretKey, JSON.stringify(statusReportObj), (obj) => {
                 activityCall(document.querySelector('.active-card'));
             });
         }
