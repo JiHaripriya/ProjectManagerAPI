@@ -9,6 +9,11 @@ router
         let query = db.query(sql, (err, results) => {
             if (err) return res.send(err.message);
             else {
+                results.forEach(resource => {
+                    if(resource.billable == 1) resource.billable = 'True'
+                    else resource.billable = 'False'
+                })
+                console.log(results)
                 res.send(JSON.stringify(results));
             }
         });
