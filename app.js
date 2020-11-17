@@ -1,14 +1,15 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const projectAPI = require('./routes/projects')
 const resourceAPI = require('./routes/resources')
 const statusReportAPI = require('./routes/status')
 
+app.use(cors())
 app.use(express.json())
 app.use('/projects', projectAPI)
 app.use('/resources', resourceAPI)
 app.use('/status', statusReportAPI)
-
 
 const port = process.env.PORT || 3000
 
