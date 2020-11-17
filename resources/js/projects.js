@@ -8,7 +8,7 @@
     3. Dynamic project list making (Cards).
     4. Hamburger menu setup.
     5. 'Add projects' form and its tag view.
-    6. PUT projects to server (Adding new project).
+    6. POST projects to server (Adding new project).
     7. Validation on blur for 'Add project' form.
     8. Navigation Drawer
 ----------------------------------------------------------------*/
@@ -166,8 +166,7 @@ function addProject() {
     end_date: end,
   };
   projects.push(projectObj);
-  console.log(projects);
-  apis.putAPI("PUT", utils.projectAPI, utils.secretKey, JSON.stringify(projects), (res) => { location.reload(); });
+  apis.putAPI("POST", utils.projectAPI, utils.secretKey, JSON.stringify(projectObj), (res) => { location.reload(); });
 }
 
 function removeProjects() {

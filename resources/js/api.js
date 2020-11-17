@@ -61,7 +61,7 @@ let putAPI = function (method, url, secretKey, body, callback) {
   xhrp.send(body);
 }
 
-let preLoader = function(){
+let preLoader = function() {
   const leftSection = document.querySelector('.side-panel')
   const rightSection = document.querySelector('.main-panel')
 

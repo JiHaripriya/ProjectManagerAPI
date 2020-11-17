@@ -45,9 +45,7 @@ router
         statusReports = Object.values(result)
 
         // Remove project_id property from object
-        statusReports.forEach(eachProjectStatus => {
-            eachProjectStatus.forEach(eachReport => delete eachReport.projectId)
-        })
+        statusReports.forEach(eachProjectStatus => { eachProjectStatus.forEach(eachReport => delete eachReport.projectId)})
 
         res.send(statusReports)
     })
