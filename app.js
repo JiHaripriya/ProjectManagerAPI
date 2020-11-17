@@ -1,10 +1,12 @@
 const express = require('express')
 const app = express()
 const projectAPI = require('./routes/projects')
+const resourceAPI = require('./routes/resources')
 const statusReportAPI = require('./routes/status')
 
 app.use(express.json())
 app.use('/projects', projectAPI)
+app.use('/resources', resourceAPI)
 app.use('/status', statusReportAPI)
 
 
