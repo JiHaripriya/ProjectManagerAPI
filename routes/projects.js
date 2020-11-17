@@ -6,6 +6,7 @@ const utils = require('../utils')
 
 // Server side validation
 const projectDetailsSchema = Joi.object({
+    id: Joi.number(),
     project_name: Joi.string().max(150).required(),
     project_desc: Joi.string().max(201).pattern(new RegExp('^[a-zA-Z .]*$')).required(),
     percentage_complete: Joi.number().min(0).max(100).required(),

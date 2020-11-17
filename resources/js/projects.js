@@ -166,8 +166,7 @@ function addProject() {
     end_date: end,
   };
   projects.push(projectObj);
-  console.log(projects);
-  apis.putAPI("PUT", utils.projectAPI, utils.secretKey, JSON.stringify(projects), (res) => { location.reload(); });
+  apis.putAPI("POST", utils.projectAPI, utils.secretKey, JSON.stringify(projectObj), (res) => { location.reload(); });
 }
 
 function removeProjects() {
