@@ -15,7 +15,8 @@ const projectDetailsSchema = Joi.object({
 })
 
 router
-.get('/', (req, res) => {
+.route('/')
+.get((req, res) => {
     let sql = 'SELECT * FROM projects';
     db.query(sql, (err, results) => {
         if(err) return res.send(err.message)
@@ -31,7 +32,7 @@ router
         })
     })
 })
-.post('/', (req, res) => {
+.post((req, res) => {
     const {tech_used , ...projectDetails} = req.body
     const validationStatus = projectDetailsSchema.validate(req.body)
     // Handling bad requests
