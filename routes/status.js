@@ -3,6 +3,7 @@ const router = express.Router()
 const Joi = require('joi')
 const db = require('../db')
 const utils = require('../utils')
+const verify = require('./verifyToken')
 
 // Server side validation
 const statusReportSchema = Joi.object({
@@ -18,7 +19,7 @@ const statusReportSchema = Joi.object({
 
 router
 .route('/')
-.get((req, res) => {
+.get(verify, (req, res) => {
     let sql = `SELECT sr.project_id, sr.date, r.name, r.email_id, sr.activity, sr.hours_spent, sr.posted_on FROM status_report AS sr
                LEFT JOIN project_resource_mapping AS pr ON sr.project_id = pr.project_id 
                LEFT JOIN resources AS r ON sr.resource_id = r.resource_id`;
@@ -51,7 +52,7 @@ router
     })
 })
 // Post status report
-.post((req, res) => {
+.post(verify, (req, res) => {
 
     // Get resource id of :email passed
     let sql = `SELECT resource_id FROM resources WHERE email_id='${req.body.emailId}'` 

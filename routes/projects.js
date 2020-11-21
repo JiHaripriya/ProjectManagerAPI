@@ -3,6 +3,7 @@ const router = express.Router()
 const Joi = require('joi')
 const db = require('../db')
 const utils = require('../utils')
+const verify = require('./verifyToken')
 
 // Server side validation
 const projectDetailsSchema = Joi.object({
@@ -17,13 +18,15 @@ const projectDetailsSchema = Joi.object({
 
 router
 .route('/')
-.get((req, res) => {
+.get(verify, (req, res) => {
+    
     let sql = 'SELECT project_id as id, name as project_name, description as project_desc, percent as percentage_complete, start_date, end_date FROM projects';
     db.query(sql, (err, results) => {
         if(err) return res.send(err.message)
 
         let sql = `SELECT project_id, GROUP_CONCAT(technology_name) as technologies FROM project_technology_mapping GROUP BY project_id`
         db.query(sql, (err, technologyMapping) => {
+            
             projects = results.map(eachProject => {
                 eachProject.start_date = utils.getFullDate(eachProject.start_date), eachProject.end_date = utils.getFullDate(eachProject.end_date)
                 eachProject["tech_used"] = technologyMapping[eachProject.id - 1] ? technologyMapping[eachProject.id - 1].technologies.split(',') : []
@@ -33,7 +36,7 @@ router
         })
     })
 })
-.post((req, res) => {
+.post(verify, (req, res) => {
     const {tech_used , ...projectDetails} = req.body
     const validationStatus = projectDetailsSchema.validate(req.body)
     // Handling bad requests
@@ -51,7 +54,7 @@ router
 
 router
 .route("/:id")
-.put((req, res) => {
+.put(verify, (req, res) => {
     const {tech_used , ...projectDetails} = req.body
     const validationStatus = projectDetailsSchema.validate(req.body)
     if(validationStatus.error) return res.status(400).send(validationStatus.error.details.map(errorMsg => errorMsg.message))
