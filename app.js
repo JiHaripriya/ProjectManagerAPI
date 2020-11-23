@@ -6,6 +6,7 @@ const resourceAPI = require('./routes/resources')
 const statusReportAPI = require('./routes/status')
 const authenticationAPI = require('./routes/auth')
 
+// Middleware
 app.use(cors())
 app.use(express.json())
 app.use('/api/user', authenticationAPI)

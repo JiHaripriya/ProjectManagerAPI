@@ -1,3 +1,5 @@
+// Commonly used functions
+
 const singleToDouble = (number) => {
     if(String(number).length == 1) return `0${number}`
     else return number 

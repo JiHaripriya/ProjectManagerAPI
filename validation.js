@@ -1,4 +1,4 @@
-// Validation for User
+// Validation for User credentials
 const Joi = require('joi')
 
 // Register validation
